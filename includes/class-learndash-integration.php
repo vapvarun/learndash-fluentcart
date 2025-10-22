@@ -137,11 +137,10 @@ class LearnDash_FluentCart_Integration_Module {
 				'inline_tip' => __( 'Select one or more groups to enroll customers in.', 'learndash-fluentcart' ),
 			),
 			'remove_on_refund' => array(
-				'key'         => 'remove_on_refund',
-				'label'       => __( 'Remove Access on Refund', 'learndash-fluentcart' ),
-				'component'   => 'checkbox',
-				'check_value' => 'yes',
-				'inline_tip'  => __( 'Automatically remove course/group access when the order is refunded or cancelled.', 'learndash-fluentcart' ),
+				'key'            => 'remove_on_refund',
+				'label'          => __( 'Remove Access on Refund', 'learndash-fluentcart' ),
+				'component'      => 'checkbox-single',
+				'checkbox_label' => __( 'Automatically remove course/group access when the order is refunded or cancelled.', 'learndash-fluentcart' ),
 			),
 		);
 
@@ -169,13 +168,28 @@ class LearnDash_FluentCart_Integration_Module {
 		$enrolled_courses = isset( $integration['enrolled_courses'] ) ? $integration['enrolled_courses'] : array();
 		$enrolled_groups  = isset( $integration['enrolled_groups'] ) ? $integration['enrolled_groups'] : array();
 
-		// Ensure remove_on_refund has a value
-		if ( ! isset( $integration['remove_on_refund'] ) ) {
+		// Normalize remove_on_refund to 'yes' or 'no'
+		if ( isset( $integration['remove_on_refund'] ) ) {
+			// Handle boolean true, string 'true', or truthy values
+			if ( $integration['remove_on_refund'] === true || $integration['remove_on_refund'] === 'true' || $integration['remove_on_refund'] === 'yes' || $integration['remove_on_refund'] === 1 || $integration['remove_on_refund'] === '1' ) {
+				$integration['remove_on_refund'] = 'yes';
+			} else {
+				$integration['remove_on_refund'] = 'no';
+			}
+		} else {
+			// Default to 'yes' if not set
 			$integration['remove_on_refund'] = 'yes';
 		}
 
-		// Ensure enabled has a value
-		if ( ! isset( $integration['enabled'] ) ) {
+		// Normalize enabled to 'yes' or 'no'
+		if ( isset( $integration['enabled'] ) ) {
+			if ( $integration['enabled'] === true || $integration['enabled'] === 'true' || $integration['enabled'] === 'yes' || $integration['enabled'] === 1 || $integration['enabled'] === '1' ) {
+				$integration['enabled'] = 'yes';
+			} else {
+				$integration['enabled'] = 'no';
+			}
+		} else {
+			// Default to 'yes' if not set
 			$integration['enabled'] = 'yes';
 		}
 
