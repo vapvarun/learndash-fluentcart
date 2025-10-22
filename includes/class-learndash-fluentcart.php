@@ -78,25 +78,25 @@ class LearnDash_FluentCart_Integration {
 	 * Setup hooks
 	 */
 	private function setup_hooks() {
-		// Order enrollment hooks
-		add_action( 'fluent_cart/order_paid_done', array( $this, 'process_enrollment' ), 10, 2 );
-		add_action( 'fluent_cart/order_status_changed_to_paid', array( $this, 'process_enrollment' ), 10, 2 );
-		add_action( 'fluent_cart/order_status_changed_to_completed', array( $this, 'process_enrollment' ), 10, 2 );
-		add_action( 'fluent_cart/order_status_changed_to_processing', array( $this, 'process_enrollment' ), 10, 2 );
+		// Order enrollment hooks - Priority 5 to run BEFORE email notifications (priority 10+)
+		add_action( 'fluent_cart/order_paid_done', array( $this, 'process_enrollment' ), 5, 2 );
+		add_action( 'fluent_cart/order_status_changed_to_paid', array( $this, 'process_enrollment' ), 5, 2 );
+		add_action( 'fluent_cart/order_status_changed_to_completed', array( $this, 'process_enrollment' ), 5, 2 );
+		add_action( 'fluent_cart/order_status_changed_to_processing', array( $this, 'process_enrollment' ), 5, 2 );
 
-		// Subscription enrollment hooks
-		add_action( 'fluent_cart/subscription_activated', array( $this, 'process_subscription_enrollment' ), 10, 2 );
-		add_action( 'fluent_cart/subscription_renewed', array( $this, 'process_subscription_renewal' ), 10, 2 );
+		// Subscription enrollment hooks - Priority 5 to run BEFORE email notifications
+		add_action( 'fluent_cart/subscription_activated', array( $this, 'process_subscription_enrollment' ), 5, 2 );
+		add_action( 'fluent_cart/subscription_renewed', array( $this, 'process_subscription_renewal' ), 5, 2 );
 
-		// Order unenrollment hooks
-		add_action( 'fluent_cart/order_refunded', array( $this, 'process_unenrollment' ), 10, 1 );
-		add_action( 'fluent_cart/order_fully_refunded', array( $this, 'process_unenrollment' ), 10, 1 );
-		add_action( 'fluent_cart/order_status_changed_to_cancelled', array( $this, 'process_unenrollment' ), 10, 1 );
+		// Order unenrollment hooks - Priority 5 to run BEFORE email notifications
+		add_action( 'fluent_cart/order_refunded', array( $this, 'process_unenrollment' ), 5, 1 );
+		add_action( 'fluent_cart/order_fully_refunded', array( $this, 'process_unenrollment' ), 5, 1 );
+		add_action( 'fluent_cart/order_status_changed_to_cancelled', array( $this, 'process_unenrollment' ), 5, 1 );
 
-		// Subscription unenrollment hooks
-		add_action( 'fluent_cart/subscription_canceled', array( $this, 'process_subscription_unenrollment' ), 10, 2 );
-		add_action( 'fluent_cart/subscription_eot', array( $this, 'process_subscription_unenrollment' ), 10, 2 );
-		add_action( 'fluent_cart/subscription_expired_validity', array( $this, 'process_subscription_unenrollment' ), 10, 2 );
+		// Subscription unenrollment hooks - Priority 5 to run BEFORE email notifications
+		add_action( 'fluent_cart/subscription_canceled', array( $this, 'process_subscription_unenrollment' ), 5, 2 );
+		add_action( 'fluent_cart/subscription_eot', array( $this, 'process_subscription_unenrollment' ), 5, 2 );
+		add_action( 'fluent_cart/subscription_expired_validity', array( $this, 'process_subscription_unenrollment' ), 5, 2 );
 	}
 
 	/**
@@ -264,6 +264,11 @@ class LearnDash_FluentCart_Integration {
 			return $order;
 		}
 
+		// FluentCart passes array with 'order' key in events
+		if ( is_array( $order ) && isset( $order['order'] ) ) {
+			$order = $order['order'];
+		}
+
 		// Get order ID
 		$order_id = 0;
 		if ( is_numeric( $order ) ) {
@@ -275,6 +280,7 @@ class LearnDash_FluentCart_Integration {
 		}
 
 		if ( ! $order_id ) {
+			$this->log( 'Could not extract order ID from provided data', 'error' );
 			return null;
 		}
 
