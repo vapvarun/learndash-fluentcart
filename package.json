@@ -1,0 +1,33 @@
+{
+  "name": "learndash-fluentcart",
+  "version": "1.0.0",
+  "description": "LearnDash LMS integration for FluentCart",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "build": "grunt build",
+    "wpcs": "grunt phpcs",
+    "makepot": "grunt makepot",
+    "zip": "grunt compress"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wbcomdesigns/learndash-fluentcart"
+  },
+  "keywords": [
+    "learndash",
+    "fluentcart",
+    "wordpress",
+    "lms",
+    "ecommerce"
+  ],
+  "author": "Wbcom Designs",
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "grunt": "^1.6.1",
+    "grunt-contrib-clean": "^2.0.1",
+    "grunt-contrib-compress": "^2.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-phpcs": "^0.4.0",
+    "grunt-wp-i18n": "^1.0.3"
+  }
+}

@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<ruleset name="LearnDash FluentCart Integration">
+	<description>WordPress Coding Standards for LearnDash FluentCart Integration</description>
+
+	<!-- Check all PHP files -->
+	<file>.</file>
+
+	<!-- Exclude paths -->
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/dist/*</exclude-pattern>
+	<exclude-pattern>*/languages/*</exclude-pattern>
+
+	<!-- Show progress -->
+	<arg value="ps"/>
+
+	<!-- Show sniff codes -->
+	<arg value="ns"/>
+
+	<!-- Check up to 8 files simultaneously -->
+	<arg name="parallel" value="8"/>
+
+	<!-- Use colors in output -->
+	<arg name="colors"/>
+
+	<!-- Include the WordPress-Core standard -->
+	<rule ref="WordPress-Core">
+		<!-- Allow short array syntax -->
+		<exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+	</rule>
+
+	<!-- Include the WordPress-Docs standard -->
+	<rule ref="WordPress-Docs"/>
+
+	<!-- Include the WordPress-Extra standard -->
+	<rule ref="WordPress-Extra">
+		<!-- Exclude filename rules (allow class-*.php naming) -->
+		<exclude name="WordPress.Files.FileName"/>
+	</rule>
+
+	<!-- Let's also check that everything is properly documented -->
+	<rule ref="WordPress-Docs">
+		<!-- Allow missing @package tags -->
+		<exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
+	</rule>
+
+	<!-- Check for PHP cross-version compatibility -->
+	<config name="testVersion" value="7.4-"/>
+	<rule ref="PHPCompatibility"/>
+
+	<!-- Text domain check -->
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="learndash-fluentcart"/>
+			</property>
+		</properties>
+	</rule>
+
+	<!-- Verify that no WP functions are used which are deprecated or removed -->
+	<rule ref="WordPress.WP.DeprecatedFunctions">
+		<properties>
+			<property name="minimum_supported_version" value="5.0"/>
+		</properties>
+	</rule>
+
+	<!-- Check for correct usage of WordPress global variables -->
+	<rule ref="WordPress.WP.GlobalVariablesOverride"/>
+</ruleset>
